@@ -9,6 +9,7 @@ import MUIDataTable from "mui-datatables";
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import {SERVER_NAME} from "../../../../Constants"
 /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 function TabContainer(props) {
@@ -51,7 +52,7 @@ class ListInternAbsent extends React.Component {
 
     GetInternListAbsent() {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-        fetch('http://localhost:8080/internshowattend')
+        fetch(SERVER_NAME + 'internshowattend')
             .then(response => response.json())
             .then(data => {
                 let NewData = []
@@ -70,7 +71,7 @@ class ListInternAbsent extends React.Component {
 
     GetInternListName() {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-        fetch('http://localhost:8080/internabsent')
+        fetch(SERVER_NAME + 'internabsent')
             .then(response => response.json())
             .then(data => {
                 let NewData = []

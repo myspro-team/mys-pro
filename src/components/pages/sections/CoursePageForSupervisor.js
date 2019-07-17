@@ -13,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom'
+import {SERVER_NAME} from "../../../Constants"
 // /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 function TabContainer(props) {
@@ -131,7 +132,7 @@ class CoursePageForMentor extends React.Component {
   }
   GetCourseList() {
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch('http://localhost:8080/courses')
+    fetch(SERVER_NAME + 'courses')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -233,7 +234,7 @@ class CoursePageForMentor extends React.Component {
       "MentorID": mentorlist,
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/course",
+    fetch(SERVER_NAME + "course",
       {
         method: "PUT",
         mode: "cors",
@@ -264,7 +265,7 @@ class CoursePageForMentor extends React.Component {
       "MentorID": mentorlist,
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/course",
+    fetch(SERVER_NAME + "course",
       {
         method: "POST",
         headers: {
@@ -285,7 +286,7 @@ class CoursePageForMentor extends React.Component {
   }
 
   ListMentor() {
-    fetch('http://localhost:8080/mentors')
+    fetch(SERVER_NAME + 'mentors')
       .then(response => response.json())
       .then(result => {
         let mentorlist = []
@@ -299,7 +300,7 @@ class CoursePageForMentor extends React.Component {
   }
 
   handlerDeleteCourse = () => {
-    fetch("http://localhost:8080/course/" + this.state.id, {
+    fetch(SERVER_NAME + "course/" + this.state.id, {
       method: 'DELETE',
       mode: 'cors'
     })

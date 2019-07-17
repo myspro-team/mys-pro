@@ -25,7 +25,7 @@ import ReactNotification from "react-notifications-component";
 import { unstable_Box as Box } from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import $ from 'jquery';
-
+import {SERVER_NAME} from "../../../Constants"
 
 const styles = theme => ({
     root: {
@@ -109,7 +109,7 @@ class EditInternInfor extends React.Component {
     GetIntern() {
         const id = this.state.id;
         const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
-        fetch('http://localhost:8080/getintern/' + id)
+        fetch(SERVER_NAME + 'getintern/' + id)
             .then(response => response.json())
             .then(data => {
                 var intern = data.Intern
@@ -205,7 +205,7 @@ class EditInternInfor extends React.Component {
             "CourseID": this.state.intern.CourseID,
             "IsDeleted": false
         }
-        fetch("http://localhost:8080/internu/" + this.state.id, {
+        fetch(SERVER_NAME + "internu/" + this.state.id, {
             method: 'PUT',
             mode: 'cors',
             headers: {
@@ -222,7 +222,7 @@ class EditInternInfor extends React.Component {
     // handlerCheckEmailExits() {
     //     var checkEmail = false
     //     $.ajax({
-    //         url: "http://localhost:8080/checkemail/" + this.state.intern.Email,
+    //         url: SERVER_NAME + "checkemail/" + this.state.intern.Email,
     //         type: "GET",
     //         async: false,
     //         success: function (response) {

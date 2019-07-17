@@ -1,1 +1,1 @@
-export const SERVER_NAME = "http://localhost:8080/"
+export const SERVER_NAME = "http://192.168.1.16:8080/"

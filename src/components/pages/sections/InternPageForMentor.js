@@ -16,7 +16,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
-
+import {SERVER_NAME} from "../../../Constants"
+import PopupIntern from './PopupIntern';
 /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 function TabContainer(props) {
@@ -58,7 +59,8 @@ class InternPage extends React.Component {
       isUpdate: false,
       isClose: false,
       checkValidate: true,
-      CourseName: ''
+      CourseName: '',
+      popupIntern: false // mới bổ sung
     };
     this.errorName = "";
     this.errorPhone = "";
@@ -140,7 +142,7 @@ class InternPage extends React.Component {
 
   GetInternList() {
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch('http://localhost:8080/intern')
+    fetch(SERVER_NAME + 'intern')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -166,6 +168,7 @@ class InternPage extends React.Component {
 
     this.GetInternList()
     this.GetListCourse()
+    console.log(this.state.internList)
   }
 
   toggleIntern = () => {
@@ -173,6 +176,14 @@ class InternPage extends React.Component {
       modalIntern: !this.state.modalIntern,
     });
   };
+
+  //bổ sung thêm
+  changeStatusForm = (status) => {
+    this.setState({
+      popupIntern:status
+    })
+  }
+  //
 
   addIntern = () => {
     this.setState({
@@ -225,13 +236,13 @@ class InternPage extends React.Component {
     }
     var checkAdd = false
     $.ajax({
-      url: "http://localhost:8080/checkemail/" + data['Email'],
+      url: SERVER_NAME + "checkemail/" + data['Email'],
       type: "GET",
       async: false,
       success: function (response) {
         if (response['message'] == "Success") {
           $.ajax({
-            url: "http://localhost:8080/intern",
+            url: SERVER_NAME + "intern",
             type: "POST",
             async: false,
             dataType: "json",
@@ -258,7 +269,7 @@ class InternPage extends React.Component {
   }
 
   GetListCourse() {
-    fetch('http://localhost:8080/courses')
+    fetch(SERVER_NAME + 'courses')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -274,7 +285,7 @@ class InternPage extends React.Component {
 
   handlerDeleteIntern = () => {
     if (confirm("bạn chắc chắn muốn xóa ?")) { //eslint-disable-line
-      fetch("http://localhost:8080/intern/" + this.state.id, {
+      fetch(SERVER_NAME + "intern/" + this.state.id, {
         method: 'DELETE',
         mode: 'cors',
       })
@@ -305,7 +316,7 @@ class InternPage extends React.Component {
       "CourseID": this.state.courseID,
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/internu/" + this.state.id, {
+    fetch(SERVER_NAME + "internu/" + this.state.id, {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -778,7 +789,7 @@ class InternPage extends React.Component {
     this.setState({
     });
   };
-
+  
   render() {
     const { classes } = this.props;
     return (
@@ -792,7 +803,9 @@ class InternPage extends React.Component {
                 </div>
                 <MDBBtn
                   className="mb-3 blue darken-2"
-                  onClick={this.addIntern}>
+                  // onClick={this.addIntern}>
+                  onClick={(status) => this.changeStatusForm(!this.state.popupIntern)}
+                  >
                   Add
                 </MDBBtn>
 
@@ -805,7 +818,10 @@ class InternPage extends React.Component {
               </CardBody>
             </Card>
           </Col>
-
+          <PopupIntern 
+          isUpdate={this.state.isUpdate}
+          popupIntern={this.state.popupIntern}
+          changeStatusForm={(status) => this.changeStatusForm(status)}></PopupIntern>
           {
             // AddIntern, Edit table
           }
@@ -814,7 +830,6 @@ class InternPage extends React.Component {
             toggle={this.toggleIntern}
             size="md"
             cascading>
-
             <MDBModalBody >
               <MDBInput fullwidth="true" size="" label="Name" name="name" value={this.state.name} onInput={this.handleChangeValue.bind(this)} />
               <MDBInput fullwidth="true" label="Phone" name="phone" value={this.state.phone} onInput={this.handleChangeValue.bind(this)} />
@@ -825,7 +840,7 @@ class InternPage extends React.Component {
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
                 </Select>
-              </FormControl ><br />
+              </FormControl >
               <FormControl fullWidth>
                 <InputLabel htmlFor="select-multiple">Course</InputLabel>
                 <Select fullWidth label="Course" name="course" value={this.state.courseID} onChange={this.handleChangeValue.bind(this)}>
@@ -834,7 +849,6 @@ class InternPage extends React.Component {
                   })}
                 </Select>
               </FormControl>
-
               <MDBInput
                 label="DOB" name="dob" id="date" type="date"
                 value={this.state.dob}
@@ -847,7 +861,6 @@ class InternPage extends React.Component {
               <div className="text-center mt-1-half">
                 <MDBInput fullWidth label="Faculty" name="Faculty" value={this.state.Faculty} onInput={this.handleChangeValue.bind(this)} />
                 <div className="text-center mt-1-half">
-
                   {
                     (this.state.isUpdate === false &&
                     this.state.doneName === true &&

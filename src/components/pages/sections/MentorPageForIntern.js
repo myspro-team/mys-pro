@@ -21,7 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
-
+import {SERVER_NAME} from '../../../Constants'
 // /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 const variantIcon = {
@@ -136,7 +136,7 @@ class MentorPageForIntern extends React.Component {
   GetMentorList() {
     const internId = this.state.internId
     const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
-    fetch('http://localhost:8080/course/'+ internId +'/mentor')
+    fetch(SERVER_NAME + 'course/'+ internId +'/mentor')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -215,7 +215,7 @@ class MentorPageForIntern extends React.Component {
       "SupervisorID": "5c1a11b49ef458a033e70628",
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/mentor",
+    fetch(SERVER_NAME + "mentor",
       {
         method: "POST",
         mode: "no-cors",
@@ -232,7 +232,7 @@ class MentorPageForIntern extends React.Component {
 
 
   handlerDeleteMentor = () => {
-    fetch("http://localhost:8080/mentor/" + this.state.id, {
+    fetch(SERVER_NAME + "mentor/" + this.state.id, {
       method: 'DELETE',
       mode: 'cors'
     })
@@ -256,7 +256,7 @@ class MentorPageForIntern extends React.Component {
       "SupervisorID": "5c1a11b49ef458a033e70628",
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/mentoru/" + this.state.id, {
+    fetch(SERVER_NAME + "mentoru/" + this.state.id, {
       method: 'PUT',
       mode: 'cors',
       headers: {
