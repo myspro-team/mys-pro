@@ -1,6 +1,8 @@
 
 import React from 'react'
 import $ from 'jquery';
+import {connect} from 'react-redux'
+import axios from 'axios'
 import {
   Row, Col, Card, CardBody, MDBIcon, MDBModalBody, MDBInput, MDBBtn, MDBModal,
 } from 'mdbreact';
@@ -59,8 +61,7 @@ class InternPage extends React.Component {
       isUpdate: false,
       isClose: false,
       checkValidate: true,
-      CourseName: '',
-      popupIntern: false // mới bổ sung
+      CourseName: ''
     };
     this.errorName = "";
     this.errorPhone = "";
@@ -100,19 +101,6 @@ class InternPage extends React.Component {
           dismissable: { click: true }
         });
         break;
-        // case "errorCREATE":
-        // this.notificationDOMRef.current.addNotification({
-        //   title: "Error",
-        //   message: "Name can't blank ",
-        //   type: "danger",
-        //   insert: "top",
-        //   container: "top-right",
-        //   animationIn: ["animated", "fadeIn"],
-        //   animationOut: ["animated", "fadeOut"],
-        //   dismiss: { duration: 5000 },
-        //   dismissable: { click: true }
-        // });
-        // break;
       case "successUpdate":
         this.notificationDOMRef.current.addNotification({
           message: "Update course successfully !",
@@ -140,35 +128,8 @@ class InternPage extends React.Component {
     }
   }
 
-  GetInternList() {
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch(SERVER_NAME + 'intern')
-      .then(response => response.json())
-      .then(data => {
-        let NewData = []
-        let stt = 1
-        data.map(row => {
-          NewData.push([stt, row.Intern.ID, row.Intern.Name, row.Intern.PhoneNumber, row.Intern.Email, row.Intern.Gender ? "Male" : "Female",
-            this.convertDate2((new Date(row.Intern.DoB)).toLocaleDateString('en-US', options)),
-            row.Intern.University, row.Intern.Faculty, row.Course, row.Intern.CourseID,
-            // format datetime,
-          ])
-          stt++
-          return NewData,
-            console.log(NewData)
-        })
-        this.setState({
-          internList: NewData
-        })
-      });
-  }
-
-
-  componentDidMount() {
-
-    this.GetInternList()
-    this.GetListCourse()
-    console.log(this.state.internList)
+  componentWillMount() {
+    this.props.getInternList()
   }
 
   toggleIntern = () => {
@@ -177,13 +138,6 @@ class InternPage extends React.Component {
     });
   };
 
-  //bổ sung thêm
-  changeStatusForm = (status) => {
-    this.setState({
-      popupIntern:status
-    })
-  }
-  //
 
   addIntern = () => {
     this.setState({
@@ -192,7 +146,8 @@ class InternPage extends React.Component {
       email: "",
       gender: "",
       CourseName: "",
-      DoB: "",
+      dob: "",
+      courseID: "",
       University: "",
       Faculty: "",
       icon: "plus",
@@ -219,8 +174,8 @@ class InternPage extends React.Component {
     this.toggleIntern()
   }
 
+  // Add intern
   handlerAddIntern = () => {
-
     var moment = require('moment');
     const date = moment.utc(this.state.dob).format();
     const data = {
@@ -258,6 +213,7 @@ class InternPage extends React.Component {
         }
       }
     });
+    this.props.getInternList()
     if (checkAdd == true) {
       this.toggleIntern()
       this.addNotification("successAdd")
@@ -265,45 +221,31 @@ class InternPage extends React.Component {
     else {
       this.addNotification("error","Email has been duplicated")
     }
-
   }
+  // end add intern
 
-  GetListCourse() {
-    fetch(SERVER_NAME + 'courses')
-      .then(response => response.json())
-      .then(data => {
-        let NewData = []
-        data.map(row => {
-          NewData.push({ ID: row._id, Name: row.CourseName })
-          return NewData
-        })
-        this.setState({
-          courseList: NewData,
-        })
-      });
-  }
-
+  // Delete intern
   handlerDeleteIntern = () => {
     if (confirm("bạn chắc chắn muốn xóa ?")) { //eslint-disable-line
       fetch(SERVER_NAME + "intern/" + this.state.id, {
         method: 'DELETE',
         mode: 'cors',
       })
-        .then(this.GetInternList())
-
+      .then(this.props.getInternList())
       this.toggleIntern()
       alert("OK")
-      window.location.reload();
     }
     else {
       this.toggleIntern()
       alert("FAIL")
     }
+    this.props.getInternList()
   }
+  // end delete intern
 
+  //Edit intern
   handlerEditIntern = () => {
     var moment = require('moment');
-
     const date = moment.utc(this.state.dob).format();
     const data = {
       "Name": this.state.name,
@@ -324,11 +266,12 @@ class InternPage extends React.Component {
       },
       body: JSON.stringify(data)
     })
-      .then(this.GetInternList())
+    .then(this.props.getInternList())
+    this.props.getInternList()
     this.toggleIntern()
     this.addNotification("successUpdate")
-    window.location.reload();
   }
+  // end edit intern
 
   columnsIntern = [
     {
@@ -448,9 +391,15 @@ class InternPage extends React.Component {
       },
     },
     onRowClick: (rowData, rowState) => {
+      console.log(this.props.listIntern)
+      var idCourse
+      this.props.listIntern.map((value) => {
+        if(value[1] === rowData[1]){
+          idCourse = value[10]
+        }
+      })
       let std = this.convertDate(rowData[6])
       this.setState({
-
         id: rowData[1],
         name: rowData[2],
         phone: rowData[3],
@@ -460,7 +409,7 @@ class InternPage extends React.Component {
         University: rowData[7],
         Faculty: rowData[8],
         course: rowData[9],
-        courseID: this.state.internList[rowState.rowIndex][10],
+        courseID: idCourse,
         isUpdate: true,
         checkValidate: true,
         doneName: true,
@@ -490,9 +439,9 @@ class InternPage extends React.Component {
     let strDate = ""
     let strMon = ""
     let strYea = ""
-    let ye = moment(rowData, "DD-MM-YYYY").get('year');
-    let mo = moment(rowData, "DD-MM-YYYY").get('month') + 1;  // 0 to 11
-    let da = moment(rowData, "DD-MM-YYYY").get('date');
+    let ye = moment(rowData, "DD/MM/YYYY").get('year');
+    let mo = moment(rowData, "DD/MM/YYYY").get('month') + 1;  // 0 to 11
+    let da = moment(rowData, "DD/MM/YYYY").get('date');
     if (da < 10)
       strDate = "0" + da
     else
@@ -512,39 +461,6 @@ class InternPage extends React.Component {
     else
       strYea = '' + ye
     return strYea + "-" + strMon + "-" + strDate
-  }
-
-  convertDate2(rowData) {
-    var moment = require('moment')
-    let strDate = ""
-    let strMon = ""
-    let strYea = ""
-    let ye = moment(rowData).get('year');
-    let mo = moment(rowData).get('month') + 1;  // 0 to 11
-    let da = moment(rowData).get('date');
-    if (da < 10)
-      strDate = "0" + da
-    else
-      strDate = '' + da
-    if (mo < 10)
-      strMon = "0" + mo
-    else
-      strMon = '' + mo
-    if (ye < 1000) {
-      strYea = "0" + ye
-      if (ye < 100) {
-        strYea = "0" + strYea
-        if (ye < 10)
-          strYea = "0" + strYea
-      }
-    }
-    else
-      strYea = '' + ye
-    return strDate + "/" + strMon + "/" + strYea
-  }
-  checkValidate() {
-
-    return false;
   }
 
   handleChangeValue(e) {
@@ -803,25 +719,21 @@ class InternPage extends React.Component {
                 </div>
                 <MDBBtn
                   className="mb-3 blue darken-2"
-                  // onClick={this.addIntern}>
-                  onClick={(status) => this.changeStatusForm(!this.state.popupIntern)}
-                  >
+                  onClick={this.addIntern}>
+                  {/* onClick={(status) => this.changeStatusForm(!this.state.popupIntern)}
+                   >  */}
                   Add
                 </MDBBtn>
 
                 <hr></hr>
                 <MUIDataTable
                   title={"Intern List"}
-                  data={this.state.internList}
+                  data={this.props.listIntern}
                   columns={this.columnsIntern}
                   options={this.optionsIntern} />
               </CardBody>
             </Card>
           </Col>
-          <PopupIntern 
-          isUpdate={this.state.isUpdate}
-          popupIntern={this.state.popupIntern}
-          changeStatusForm={(status) => this.changeStatusForm(status)}></PopupIntern>
           {
             // AddIntern, Edit table
           }
@@ -844,8 +756,8 @@ class InternPage extends React.Component {
               <FormControl fullWidth>
                 <InputLabel htmlFor="select-multiple">Course</InputLabel>
                 <Select fullWidth label="Course" name="course" value={this.state.courseID} onChange={this.handleChangeValue.bind(this)}>
-                  {this.state.courseList.map(function (course, index) {
-                    return <MenuItem key={index} value={course.ID}>{course.Name}</MenuItem>;
+                  {this.props.course.map((value) => {
+                    return <MenuItem value={value._id}>{value.CourseName}</MenuItem>;
                   })}
                 </Select>
               </FormControl>
@@ -899,7 +811,7 @@ class InternPage extends React.Component {
                       this.state.first === false ) ?
                       <MDBBtn
                         className="mb-2 blue darken-2"
-                        onClick={this.handlerEditIntern}
+                        onClick={() => this.handlerEditIntern()}
                         >
                         Update
                         <MDBIcon icon="edit" className="ml-1" />
@@ -931,4 +843,5 @@ class InternPage extends React.Component {
     )
   }
 }
-export default withStyles(styles)(InternPage);
+
+export default InternPage

@@ -8,30 +8,38 @@ class PopupIntern extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ID: {
-                value:"",
-                valid: true
-              },
-              Name: {
-                value:"",
-                valid: true
-              },
-              LastName: {
-                value:"",
-                valid: true
-              },
-              Address: {
-                value:"",
-                valid: true
-              },
-              PhoneNumber: {
-                value:"",
-                valid: true
-              },
-              Email: {
-                value:"",
-                valid: true
-              }
+            Name: {
+            value:"",
+            valid: true
+            },
+            Gender: {
+            value:"",
+            valid: true
+            },
+            CourseID: {
+            value:"",
+            valid: true
+            },
+            PhoneNumber: {
+            value:"",
+            valid: true
+            },
+            Email: {
+            value:"",
+            valid: true
+            },
+            DOB: {
+            value:"",
+            valid: true
+            },
+            University: {
+            value:"",
+            valid: true
+            },
+            Faculty: {
+            value:"",
+            valid: true
+            }
         }
     }
     toChange = (event) => {
@@ -102,10 +110,26 @@ class PopupIntern extends Component {
             return(
                 <div>
                     <MDBBtn color="secondary" onClick={() => this.resetForm()}>Close</MDBBtn>
-                    <MDBBtn color="primary" type="submit">Add</MDBBtn>
+                    <MDBBtn color="primary" type="submit" onClick={() => this.handleClickAdd()}>Add</MDBBtn>
                 </div>
             )
         }
+    }
+    handleClickAdd = () => {
+        var moment = require('moment');
+        let date = moment.utc(this.state.DOB.value).format();
+        let item = {}
+        item.Name = this.state.Name.value
+        item.PhoneNumber = this.state.PhoneNumber.value
+        item.Email = this.state.Email.value
+        item.Gender = this.state.Gender.value === "Male" ? true : false
+        item.DOB = date
+        item.University = this.state.University.value
+        item.Faculty = this.state.Faculty.value
+        item.CourseID = this.state.Faculty.value
+        item.IsDeleted = false
+        console.log(item)
+        this.props.handlerAddIntern(item)
     }
     render() {
         return (
@@ -169,9 +193,16 @@ class PopupIntern extends Component {
                         className="grey-text">Course
                         </label>
                         <select className="browser-default custom-select" name="CourseID" onChange={(event) => this.toChange(event)}>
-                            <option>Choose your course</option>
+                            {
+                                this.props.courseList.map((value,key) => {
+                                    return (
+                                        <option value={value.ID}>{value.Name}</option>
+                                    )
+                                })
+                            }
+                            {/* <option>Choose your course</option>
                             <option value="1">Java</option>
-                            <option value="2">Python</option>
+                            <option value="2">Python</option> */}
                         </select>
                         <label 
                         htmlFor="defaultFormRegisterNameEx" 
@@ -179,7 +210,7 @@ class PopupIntern extends Component {
                         </label>
                         <input 
                         className="form-control" 
-                        name="DayofBirth" 
+                        name="DOB" 
                         onChange={(event) => this.toChange(event)} 
                         type="date" 
                         id="defaultFormRegisterNameEx" 

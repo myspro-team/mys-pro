@@ -142,8 +142,8 @@ class InternPageForIntern extends React.Component {
     }
 
     componentDidMount() {
-
-        this.GetInternList()
+        this.props.getInternbySourse()
+        //this.GetInternList()
         this.GetListCourse()
     }
 
@@ -359,27 +359,27 @@ class InternPageForIntern extends React.Component {
                 delete: "Delete",
                 deleteAria: "Delete Selected Rows",
             },
-        },
-        onRowClick: (rowData, rowState) => {
-            let std = this.convertDate(rowData[6])
-            this.setState({
-
-                id: rowData[1],
-                name: rowData[2],
-                phone: rowData[3],
-                email: rowData[4],
-                gender: rowData[5],
-                dob: std,
-                University: rowData[7],
-                Faculty: rowData[8],
-                course: rowData[9],
-                courseID: this.state.internList[rowState.rowIndex][10],
-                icon: "edit",
-                isUpdate: true,
-                checkValidate: true
-            });
-            this.toggleIntern()
         }
+        // onRowClick: (rowData, rowState) => {
+        //     let std = this.convertDate(rowData[6])
+        //     this.setState({
+
+        //         id: rowData[1],
+        //         name: rowData[2],
+        //         phone: rowData[3],
+        //         email: rowData[4],
+        //         gender: rowData[5],
+        //         dob: std,
+        //         University: rowData[7],
+        //         Faculty: rowData[8],
+        //         course: rowData[9],
+        //         courseID: this.state.internList[rowState.rowIndex][10],
+        //         icon: "edit",
+        //         isUpdate: true,
+        //         checkValidate: true
+        //     });
+        //     this.toggleIntern()
+        // }
     }
 
     convertDate(rowData) {
@@ -547,7 +547,7 @@ class InternPageForIntern extends React.Component {
                                 <hr></hr>
                                 <MUIDataTable
                                     title={"Intern List"}
-                                    data={this.state.internList}
+                                    data={this.props.listInternBySourse}
                                     columns={this.columnsIntern}
                                     options={this.optionsIntern} />
                             </CardBody>
