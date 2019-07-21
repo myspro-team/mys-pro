@@ -22,7 +22,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
 import './components/report.css';
-
+import {SERVER_NAME} from "../../../Constants"
 // /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 const variantIcon = {
@@ -137,7 +137,7 @@ class MentorPageForMentor extends React.Component {
 
   GetMentorList() {
     const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
-    fetch('http://localhost:8080/mentors')
+    fetch(SERVER_NAME + 'mentors')
       .then(response => response.json())
       .then(data => {
         let NewData = []

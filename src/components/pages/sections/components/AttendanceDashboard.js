@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { MDBInput } from 'mdbreact';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import {SERVER_NAME} from "../../../../Constants"
 //LineChartHasMultiSeries http://recharts.org/en-US/examples/LineChartHasMultiSeries
 
 const styles = theme => ({
@@ -101,7 +101,7 @@ class AttendanceDashboard extends React.Component {
     GetDashBoard() {
        
         try {
-            fetch('http://localhost:8080/mentorDash/' + this.state.mentorID + '/'+ this.state.date+'/'+this.state.view)
+            fetch(SERVER_NAME + 'mentorDash/' + this.state.mentorID + '/'+ this.state.date+'/'+this.state.view)
             .then(response => response.json())
             .then(data => {
             

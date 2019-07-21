@@ -8,6 +8,7 @@ import React from "react";
   import "react-notifications-component/dist/theme.css";
 import './scroll.css';
 import $ from 'jquery';
+import {SERVER_NAME} from "../../../../Constants"
 // import AttendanceDashboard from './AttendanceDashboard';
 class InternReportDay extends React.Component {
   constructor() {
@@ -59,7 +60,7 @@ class InternReportDay extends React.Component {
       "Status"    : 3,
       "IsDeleted": false,
     }
-    fetch("http://localhost:8080/absent",
+    fetch(SERVER_NAME + "absent",
       {
         method: "PUT",
         headers: {
@@ -89,7 +90,7 @@ class InternReportDay extends React.Component {
       "Status"    : 2,
       "IsDeleted": false,
     }
-    fetch("http://localhost:8080/absent",
+    fetch(SERVER_NAME + "absent",
       {
         method: "PUT",
         mode: "cors",
@@ -181,7 +182,7 @@ class InternReportDay extends React.Component {
 
   getAttendance(){
     $.ajax({
-      url: "http://localhost:8080/" + "attendance/"+this.state.user.ID+"/"+this.state.position+"/daily",
+      url: SERVER_NAME + "attendance/"+this.state.user.ID+"/"+this.state.position+"/daily",
       type: "GET",
       success: function (response) {
         console.log(response)
@@ -207,7 +208,7 @@ class InternReportDay extends React.Component {
 
   Getreason(){
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch("http://localhost:8080/absents")
+    fetch(SERVER_NAME + "absents")
     .then(response => response.json())
       .then(result => {
         let list = [];
@@ -225,7 +226,7 @@ class InternReportDay extends React.Component {
   GetIntern(){
     // const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     let c = 0;
-    fetch("http://localhost:8080/course/"+this.state.user.ID+"/mentorid")
+    fetch(SERVER_NAME + "course/"+this.state.user.ID+"/mentorid")
     .then(response => response.json())
       .then(result => {
           c = result.length
@@ -236,7 +237,7 @@ class InternReportDay extends React.Component {
   }
   GetReported(){
     let c = 0;
-    fetch("http://localhost:8080/report/today/"+this.state.user.ID)
+    fetch(SERVER_NAME + "report/today/"+this.state.user.ID)
     .then(response => response.json())
       .then(result => {
         result.map(r=> {
@@ -256,7 +257,7 @@ class InternReportDay extends React.Component {
       today.setHours(-24 * (day - 1)); 
     var moment = require('moment');
     const std = moment.utc(today).format();
-    fetch("http://localhost:8080/report/week/"+this.state.user.ID+"/"+std)
+    fetch(SERVER_NAME + "report/week/"+this.state.user.ID+"/"+std)
     .then(response => response.json())
       .then(result => {
         result.map(r=> {

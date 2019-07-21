@@ -15,12 +15,19 @@ class MentorPage extends React.Component {
   render() {
     if(this.state.role === 1)
         return (
-            <InternPageForIntern></InternPageForIntern>
+            <InternPageForIntern
+            getInternbySourse={() => this.props.getInternbySourse()}
+            listInternBySourse={this.props.listInternBySourse}
+            ></InternPageForIntern>
             
         );
     else 
         return (
-            <InternPageForMentor></InternPageForMentor>
+            <InternPageForMentor
+            listIntern={this.props.listIntern}
+            course={this.props.course}
+            getInternList={() => this.props.getInternList()}
+            getCourse={() => this.props.getCourse()}></InternPageForMentor>
         );
     }
   }

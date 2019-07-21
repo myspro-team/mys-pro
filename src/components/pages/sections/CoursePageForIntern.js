@@ -8,7 +8,7 @@ import MUIDataTable from "mui-datatables";
 import {
   createBrowserHistory,
 } from 'history';
-
+import {SERVER_NAME} from "../../../Constants"
 class CoursePageForIntern extends React.Component {
   constructor() {
     super();
@@ -28,7 +28,7 @@ class CoursePageForIntern extends React.Component {
   GetCourse(id) {
     const history = createBrowserHistory();
     const DATE_OPTIONS = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch('http://localhost:8080/course/' + id)
+    fetch(SERVER_NAME + 'course/' + id)
       .then(response => {
         if (!response.ok) {
           history.push({ pathname: '/404' })
@@ -404,7 +404,7 @@ class CoursePageForIntern extends React.Component {
     this.handlerGetIntern()
   }
   handlerListMentor() {
-    fetch('http://localhost:8080/mentors')
+    fetch(SERVER_NAME + 'mentors')
       .then(response => response.json())
       .then(result => {
         let ml = []
@@ -417,7 +417,7 @@ class CoursePageForIntern extends React.Component {
       });
   }
   handlerGetIntern() {
-    fetch('http://localhost:8080/intern/'+this.state.user.ID)
+    fetch(SERVER_NAME + 'intern/'+this.state.user.ID)
       .then(response => response.json())
       .then(result => {
         this.GetCourse(result.CourseID) 
@@ -461,7 +461,7 @@ class CoursePageForIntern extends React.Component {
       "Progress": this.state.progress,
       "Note": this.state.note
     }
-    fetch("http://localhost:8080/coursedetailupdate/" + params.id + "/" + this.state.cnt,
+    fetch(SERVER_NAME + "coursedetailupdate/" + params.id + "/" + this.state.cnt,
       {
         method: "PUT",
         mode: "cors",

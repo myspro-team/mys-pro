@@ -2,7 +2,7 @@ import React from 'react';
 import { ProgressBar } from 'react-bootstrap'
 import { MDBCard} from 'mdbreact';
 import { InputLabel } from '@material-ui/core';
-
+import {SERVER_NAME} from "../../../Constants"
 class CourseCompleted extends React.Component {
   constructor(props) {
     super(props)
@@ -17,7 +17,7 @@ class CourseCompleted extends React.Component {
 
  getCourses(){
    if(this.state.role === 1){
-    fetch("http://localhost:8080/course/"+this.state.id+"/intern")
+    fetch(SERVER_NAME + "course/"+this.state.id+"/intern")
       .then(response => {
         return response.json();
       })
@@ -46,7 +46,7 @@ class CourseCompleted extends React.Component {
       });
    }
     else if(this.state.role === 2){
-      fetch("http://localhost:8080/courses/" + this.state.id)
+      fetch(SERVER_NAME + "courses/" + this.state.id)
       .then(response => {
         return response.json();
       })

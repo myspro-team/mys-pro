@@ -15,6 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import $ from 'jquery';
+import {SERVER_NAME} from "../../../Constants"
 /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 function TabContainer(props) {
@@ -120,7 +121,7 @@ class InternPageForIntern extends React.Component {
 
     GetInternList() {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-        fetch('http://localhost:8080/intern/' + this.state.user.ID + '/course')
+        fetch(SERVER_NAME + 'intern/' + this.state.user.ID + '/course')
             .then(response => response.json())
             .then(data => {
                 let NewData = []
@@ -141,8 +142,8 @@ class InternPageForIntern extends React.Component {
     }
 
     componentDidMount() {
-
-        this.GetInternList()
+        this.props.getInternbySourse()
+        //this.GetInternList()
         this.GetListCourse()
     }
 
@@ -153,7 +154,7 @@ class InternPageForIntern extends React.Component {
     };
 
     GetListCourse() {
-        fetch('http://localhost:8080/courses')
+        fetch(SERVER_NAME + 'courses')
             .then(response => response.json())
             .then(data => {
                 let NewData = []
@@ -183,13 +184,13 @@ class InternPageForIntern extends React.Component {
         }
         var checkAdd = false
         $.ajax({
-            url: "http://localhost:8080/checkemail/" + data['Email'],
+            url: SERVER_NAME + "checkemail/" + data['Email'],
             type: "GET",
             async: false,
             success: function (response) {
                 if (response['message'] == "Success") {
                     $.ajax({
-                        url: "http://localhost:8080/intern",
+                        url: SERVER_NAME + "intern",
                         type: "POST",
                         async: false,
                         dataType: "json",
@@ -228,7 +229,7 @@ class InternPageForIntern extends React.Component {
             "CourseID": this.state.courseID,
             "IsDeleted": false
         }
-        fetch("http://localhost:8080/internu/" + this.state.id, {
+        fetch(SERVER_NAME + "internu/" + this.state.id, {
             method: 'PUT',
             mode: 'cors',
             headers: {
@@ -358,27 +359,27 @@ class InternPageForIntern extends React.Component {
                 delete: "Delete",
                 deleteAria: "Delete Selected Rows",
             },
-        },
-        onRowClick: (rowData, rowState) => {
-            let std = this.convertDate(rowData[6])
-            this.setState({
-
-                id: rowData[1],
-                name: rowData[2],
-                phone: rowData[3],
-                email: rowData[4],
-                gender: rowData[5],
-                dob: std,
-                University: rowData[7],
-                Faculty: rowData[8],
-                course: rowData[9],
-                courseID: this.state.internList[rowState.rowIndex][10],
-                icon: "edit",
-                isUpdate: true,
-                checkValidate: true
-            });
-            this.toggleIntern()
         }
+        // onRowClick: (rowData, rowState) => {
+        //     let std = this.convertDate(rowData[6])
+        //     this.setState({
+
+        //         id: rowData[1],
+        //         name: rowData[2],
+        //         phone: rowData[3],
+        //         email: rowData[4],
+        //         gender: rowData[5],
+        //         dob: std,
+        //         University: rowData[7],
+        //         Faculty: rowData[8],
+        //         course: rowData[9],
+        //         courseID: this.state.internList[rowState.rowIndex][10],
+        //         icon: "edit",
+        //         isUpdate: true,
+        //         checkValidate: true
+        //     });
+        //     this.toggleIntern()
+        // }
     }
 
     convertDate(rowData) {
@@ -546,7 +547,7 @@ class InternPageForIntern extends React.Component {
                                 <hr></hr>
                                 <MUIDataTable
                                     title={"Intern List"}
-                                    data={this.state.internList}
+                                    data={this.props.listInternBySourse}
                                     columns={this.columnsIntern}
                                     options={this.optionsIntern} />
                             </CardBody>
