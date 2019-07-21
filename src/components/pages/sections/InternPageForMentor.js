@@ -130,6 +130,7 @@ class InternPage extends React.Component {
 
   componentWillMount() {
     this.props.getInternList()
+    this.props.getCourse()
   }
 
   toggleIntern = () => {
@@ -191,13 +192,13 @@ class InternPage extends React.Component {
     }
     var checkAdd = false
     $.ajax({
-      url: SERVER_NAME + "checkemail/" + data['Email'],
+      url: "http://localhost:8080/checkemail/" + data['Email'],
       type: "GET",
       async: false,
       success: function (response) {
         if (response['message'] == "Success") {
           $.ajax({
-            url: SERVER_NAME + "intern",
+            url: "http://localhost:8080/intern",
             type: "POST",
             async: false,
             dataType: "json",
@@ -227,7 +228,7 @@ class InternPage extends React.Component {
   // Delete intern
   handlerDeleteIntern = () => {
     if (confirm("bạn chắc chắn muốn xóa ?")) { //eslint-disable-line
-      fetch(SERVER_NAME + "intern/" + this.state.id, {
+      fetch("http://localhost:8080/intern/" + this.state.id, {
         method: 'DELETE',
         mode: 'cors',
       })
@@ -258,7 +259,7 @@ class InternPage extends React.Component {
       "CourseID": this.state.courseID,
       "IsDeleted": false
     }
-    fetch(SERVER_NAME + "internu/" + this.state.id, {
+    fetch("http://localhost:8080/internu/" + this.state.id, {
       method: 'PUT',
       mode: 'cors',
       headers: {

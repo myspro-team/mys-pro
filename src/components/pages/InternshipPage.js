@@ -17,7 +17,8 @@ class MentorPage extends React.Component {
         return (
             <InternPageForIntern
             getInternbySourse={() => this.props.getInternbySourse()}
-            listInternBySourse={this.props.listInternBySourse}></InternPageForIntern>
+            listInternBySourse={this.props.listInternBySourse}
+            ></InternPageForIntern>
             
         );
     else 
@@ -25,7 +26,8 @@ class MentorPage extends React.Component {
             <InternPageForMentor
             listIntern={this.props.listIntern}
             course={this.props.course}
-            getInternList={() => this.props.getInternList()}></InternPageForMentor>
+            getInternList={() => this.props.getInternList()}
+            getCourse={() => this.props.getCourse()}></InternPageForMentor>
         );
     }
   }

@@ -1,6 +1,7 @@
 import {SERVER_NAME} from "../../../../Constants"
 import axios from 'axios'
-const redux = require('redux')
+import { createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
 
 const reducerInitialState = {
     interns: [],
@@ -20,13 +21,6 @@ const reducer = (state = reducerInitialState, action) => {
     }
 }
 
-var store = redux.createStore(reducer)
-
-
-axios.get(SERVER_NAME + 'courses')
-    .then((res) => {
-        store.dispatch({type:"GET_ALL_COURSE",getCourse:res.data})
-    })
-
+const store = createStore(reducer,applyMiddleware(thunk))
     
 export default store
