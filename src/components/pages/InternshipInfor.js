@@ -16,6 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import './attendance.css';
+import {SERVER_NAME} from "../../Constants"
 /* Import MUIDataTable using command "npm install mui-datatables --save" */
 
 function TabContainer(props) {
@@ -120,7 +121,7 @@ class Internshipfor extends React.Component {
 
   GetInternList() {
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    fetch('http://localhost:8080/intern')
+    fetch(SERVER_NAME + 'intern')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -157,7 +158,7 @@ class Internshipfor extends React.Component {
   };
 
   GetListCourse() {
-    fetch('http://localhost:8080/courses')
+    fetch(SERVER_NAME + 'courses')
       .then(response => response.json())
       .then(data => {
         let NewData = []
@@ -186,7 +187,7 @@ class Internshipfor extends React.Component {
       "CourseID": this.state.courseID,
       "IsDeleted": false
     }
-    fetch("http://localhost:8080/internu/" + this.state.id, {
+    fetch(SERVER_NAME + "internu/" + this.state.id, {
       method: 'PUT',
       mode: 'cors',
       headers: {

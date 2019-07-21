@@ -32,7 +32,7 @@ class Login extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    fetch(SERVER_NAME + 'login',
+    fetch('http://localhost:8080/login',
             {
                 method: "PUT",
                 headers:{

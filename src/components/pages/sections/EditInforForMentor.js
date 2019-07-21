@@ -25,7 +25,7 @@ import ReactNotification from "react-notifications-component";
 import { unstable_Box as Box } from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import $ from 'jquery';
-
+import {SERVER_NAME} from "../../../Constants"
 
 
 
@@ -121,7 +121,7 @@ class EditInforForMentor extends React.Component {
     GetMentor() {
         const id = this.state.id;
         const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
-        fetch('http://localhost:8080/getmentor/' + id)
+        fetch(SERVER_NAME + 'getmentor/' + id)
             .then(response => response.json())
             .then(data => {
 
@@ -219,7 +219,7 @@ class EditInforForMentor extends React.Component {
             "SupervisorID": "5c1a11b49ef458a033e70628",
             "IsDeleted": false
         }
-        fetch("http://localhost:8080/mentoru/" + this.state.id, {
+        fetch(SERVER_NAME + "mentoru/" + this.state.id, {
             method: 'PUT',
             mode: 'cors',
             headers: {
@@ -237,7 +237,7 @@ class EditInforForMentor extends React.Component {
 
     handleGetEmailState(){
         if(this.state.mentor.Email != ''){
-            fetch('http://localhost:8080/checkemail/'+this.state.mentor.Email)
+            fetch(SERVER_NAME + 'checkemail/'+this.state.mentor.Email)
         .then(response => response.json())
         .then(data => {
             this.setState({
