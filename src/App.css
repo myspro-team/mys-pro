@@ -1,0 +1,30 @@
+
+ .panel {
+    position: fixed;
+    left: 0em !important; 
+    top: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+.panel, .push {
+    -webkit-transition: all 300ms ease; 
+    -ms-transition: all 300ms ease;
+    -o-transition: all 300ms ease;
+    transition: all 300ms ease;
+}
+
+.panel {
+    margin-left: -10px;
+    background: #EEEEEE;
+    width: 295px !important;
+}
+
+.wrap {
+    position: relative;
+    padding: 20px;
+    background-color: #DCDCDC;
+    margin-left: 35px !important;
+    height: 100vh;
+    width: 1275px !important;
+}
